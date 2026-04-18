@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NAT260NBB – Weekly Journal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f2f0ec; color: #1a1a1a; font-size: 15px; line-height: 1.75; }
+
+    .navbar { background: #fff; border-bottom: 1px solid #ddd; padding: 0.85rem 1.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .navbar-brand { font-weight: 700; font-size: 14px; color: #222; }
+    .navbar-sub { font-size: 12px; color: #999; }
+
+    .tabs { background: #fff; border-bottom: 1px solid #ddd; display: flex; flex-wrap: wrap; position: sticky; top: 45px; z-index: 99; }
+    .tab { padding: 0.6rem 1.1rem; font-size: 12px; font-weight: 500; color: #888; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+    .tab:hover { color: #2d5c3e; }
+    .tab.active { color: #2d5c3e; border-bottom-color: #2d5c3e; font-weight: 700; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .page { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+    .hero { background: linear-gradient(135deg, #1e3d2a, #2d5c3e); border-radius: 16px; padding: 2.5rem 2rem; margin-bottom: 2rem; }
+    .hero-tag { display: inline-block; background: rgba(255,255,255,0.15); color: #c8f0d8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.8rem; }
+    .hero h1 { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 0.4rem; }
+    .hero-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 2rem; }
+    .pill { background: #fff; border: 1px solid #ddd; border-radius: 20px; padding: 5px 13px; font-size: 12px; color: #555; }
+
+    .section { margin-bottom: 2rem; }
+    .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem; }
+    .section-num { width: 26px; height: 26px; border-radius: 50%; background: #2d5c3e; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #aaa; }
+
+    .card { background: #fff; border: 1px solid #e5e3de; border-radius: 14px; padding: 1.5rem; margin-bottom: 0.8rem; }
+    p { font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 0.9rem; }
+    p:last-child { margin-bottom: 0; }
+
+    .key-idea { background: #fffbea; border-left: 4px solid #e6b800; border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 1.1rem; font-size: 14px; color: #5a4200; }
+    .key-idea strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #b38a00; margin-bottom: 0.25rem; }
+
+    .big-q { background: #eef6ff; border-left: 4px solid #378add; border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 0.9rem; }
+    .big-q-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #378add; margin-bottom: 0.3rem; }
+    .big-q p { font-size: 14px; color: #1a3a5c; margin: 0; }
+
+    .resource { background: #fff; border: 1px solid #e5e3de; border-radius: 14px; overflow: hidden; }
+    .resource-top { background: #2d5c3e; padding: 1rem 1.5rem; }
+    .resource-type { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px; }
+    .resource-title { font-size: 15px; font-weight: 600; color: #fff; }
+    .resource-body { padding: 1.5rem; }
+    .citation { font-size: 12px; color: #777; font-style: italic; border-left: 3px solid #c4dece; padding: 0.7rem 0.9rem; margin-top: 1rem; line-height: 1.6; background: #f7f6f3; border-radius: 0 6px 6px 0; }
+
+    .question { background: #fff; border: 1px solid #e5e3de; border-top: 4px solid #378add; border-radius: 14px; padding: 1.5rem; }
+    .question p { font-size: 15px; color: #222; }
+
+    .reflection { background: #f4f0ff; border: 1px solid #d0c4f0; border-radius: 12px; padding: 1.2rem 1.5rem; margin-top: 0.8rem; }
+    .reflection-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #7a5cc0; margin-bottom: 0.4rem; }
+    .reflection p { font-size: 14px; color: #4a3880; margin: 0; }
+
+    hr { border: none; border-top: 1px solid #e5e3de; margin: 1.75rem 0; }
+    .footer { text-align: center; font-size: 11px; color: #bbb; margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid #e5e3de; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 1.75rem 1.25rem; }
+      .hero h1 { font-size: 18px; }
+      .card, .resource-body, .question { padding: 1.1rem; }
+      .navbar-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="navbar-brand">Weekly Journal – NAT260NBB</span>
+  <span class="navbar-sub">Environmental Science · Seneca Polytechnic · 2026</span>
+</nav>
+
+<div class="tabs">
+  <button class="tab active" onclick="show(1)">Week 1</button>
+  <button class="tab" onclick="show(2)">Week 2</button>
+  <button class="tab" onclick="show(3)">Week 3</button>
+  <button class="tab" onclick="show(4)">Week 4</button>
+  <button class="tab" onclick="show(5)">Week 5</button>
+  <button class="tab" onclick="show(6)">Week 6</button>
+  <button class="tab" onclick="show(7)">Week 7</button>
+  <button class="tab" onclick="show(8)">Week 8</button>
+  <button class="tab" onclick="show(9)">Week 9</button>
+  <button class="tab" onclick="show(10)">Week 10</button>
+  <button class="tab" onclick="show(11)">Week 11</button>
+  <button class="tab" onclick="show(12)">Week 12</button>
+</div>
+
+<!-- WEEK 1 -->
+<div class="panel active" id="p1"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 1</div><h1>What is Environmental Science?</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Environmental science</span><span class="pill">Sustainability</span><span class="pill">Ecological footprint</span><span class="pill">Precautionary principle</span><span class="pill">Environmental justice</span><span class="pill">Indigenous rights</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Environmental science studies how humans and nature interact. Sustainability means meeting our needs today without taking away from future generations.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What is environmental science and why should you study it?</div>
+      <p>Environmental science is the study of how humans interact with the natural world. It pulls together biology, chemistry, economics, and politics to help us understand the problems we are creating and find ways to fix them. I think everyone should study it because the decisions we make every day — what we eat, how we travel, what we buy — all affect the environment. You cannot make good decisions about something you do not understand. Environmental science gives you the knowledge to make better choices and to hold governments and companies accountable for theirs.</p>
+    </div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What are some simple changes you could make to decrease your ecological footprint?</div>
+      <p>After calculating my ecological footprint this week, I realized transportation and food were my two biggest contributors. Some simple changes I could make include taking public transit instead of driving, eating less meat (since animal products require far more land and resources than plant-based foods), reducing food waste, buying less and choosing second-hand when possible, and switching to energy-efficient appliances at home. None of these require a dramatic lifestyle change — but together they could significantly reduce my impact.</p>
+    </div>
+
+    <div class="card">
+      <p>This week introduced what environmental science is and why it matters. It is not just about nature — it connects biology, chemistry, politics, and everyday choices. The big question is how our actions affect the planet we live on and the one we leave behind.</p>
+      <p>The most important idea was sustainability, defined in 1987 as meeting today's needs without stopping future generations from meeting theirs. The ecological footprint concept helped make this personal — it measures how much land your lifestyle actually requires. The precautionary principle says we should act carefully even before we are 100% certain about consequences. Climate change is the best example: we do not need perfect certainty to start making better choices now.</p>
+      <p>Environmental justice was also introduced — the idea that everyone deserves a clean, safe environment regardless of income or background. In Canada, Indigenous communities like the Wet'suwet'en Nation and the Aamjiwnaang First Nation near Sarnia face serious environmental damage from pipelines and petrochemical industries built on or near their lands. These are not historical problems — they are ongoing, and they show that environmental science is inseparable from human rights.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>Before this class I thought environmental science was mostly about animals and forests. Learning that it connects to human rights, economic policy, and my own daily habits made it feel much more relevant and urgent.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Website · Interactive Tool</div><div class="resource-title">Ecological Footprint Calculator — Global Footprint Network</div></div>
+      <div class="resource-body">
+        <p>This tool calculates your personal ecological footprint based on your diet, travel habits, home energy use, and shopping. It shows how many Earths would be needed if everyone lived the same way you do, and compares your footprint to your country's average.</p>
+        <p>Using it made the ecological footprint concept feel personal and real. I could see exactly which of my habits were using the most resources. It also reinforced why the precautionary principle is important — if current lifestyles are already far beyond what the planet can sustain, we need to act now rather than wait for the situation to get worse.</p>
+        <div class="citation">Global Footprint Network. (2023). <em>Ecological footprint calculator</em>. https://www.footprintnetwork.org/</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>The precautionary principle says we should act on environmental problems even before we have 100% scientific proof. But some argue this slows down economic growth and innovation. Where should the line be drawn — and who should get to decide when we have enough evidence to act?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 2 -->
+<div class="panel" id="p2"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 2</div><h1>Matter, Energy, and Life</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Organic molecules</span><span class="pill">Cell theory</span><span class="pill">Prokaryotic cells</span><span class="pill">Eukaryotic cells</span><span class="pill">Photosynthesis</span><span class="pill">Energy flow</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>All life is built from carbon-based molecules and powered by photosynthesis — the process that turns sunlight into energy and feeds almost every living thing on Earth.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What are the important properties and functions of each major class of organic molecules?</div>
+      <p>The four major classes are carbohydrates, lipids, nucleic acids, and proteins. Carbohydrates are the main energy source for cells — they are quick to break down and use. Lipids store energy long-term and make up cell membranes, which control what enters and leaves a cell. Nucleic acids (DNA and RNA) carry the genetic instructions that tell cells how to function and reproduce. Proteins do most of the actual work inside cells — they act as enzymes that speed up chemical reactions, make up structural components like muscle, and carry signals throughout the body. All four are essential and work together to keep living things alive.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered the building blocks of all living things. The four main organic molecules — carbohydrates, lipids, proteins, and nucleic acids — make up every organism on Earth. Cell theory tells us all life is made of cells, cells are the smallest unit of life, and new cells only come from existing cells.</p>
+      <p>There are two types of cells. Prokaryotic cells are simple, with no nucleus — found in bacteria. Eukaryotic cells are more complex with a membrane-bound nucleus — found in plants, animals, and fungi. The surface-to-volume ratio limits how large cells can get, which is why larger organisms need specialized cells rather than just bigger ones.</p>
+      <p>Photosynthesis was the most important topic. Plants use sunlight, water, and carbon dioxide to produce sugar and oxygen through two stages: the light-dependent reactions and the Calvin Cycle. This process produces 21% of Earth's oxygen and forms the base of nearly every food chain. Organisms that make their own food are called autotrophs; those that consume other organisms are heterotrophs. Energy flows from the sun through producers to consumers at every level of the food chain.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>I had never thought about how photosynthesis produces the ozone layer. The idea that one biological process is responsible for our breathable air and UV protection made me realize how fragile and interconnected these systems really are.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Video · Educational</div><div class="resource-title">Photosynthesis: Crash Course Biology — CrashCourse</div></div>
+      <div class="resource-body">
+        <p>This video clearly explains both stages of photosynthesis using animations and plain language. It also explains the global importance of the process — from producing oxygen to powering entire food chains. It made a complex biological process much easier to understand.</p>
+        <p>Watching this helped me connect the biology of photosynthesis to real environmental issues. If we damage forests or ocean phytoplankton through pollution or climate change, we are threatening the energy source for all life on Earth — not just plants.</p>
+        <div class="citation">CrashCourse. (2012). <em>Photosynthesis: Crash Course Biology #8</em> [Video]. YouTube. https://www.youtube.com/watch?v=sQK3Yr4Sc_k</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Ocean phytoplankton perform about half of all photosynthesis on Earth. Climate change is warming and acidifying the oceans, threatening these tiny organisms. If phytoplankton populations dropped significantly, what do you think the biggest consequences would be — and could humans adapt?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 3 -->
+<div class="panel" id="p3"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 3</div><h1>Ecosystems and Biomes</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Ecosystems</span><span class="pill">Food chains</span><span class="pill">Food webs</span><span class="pill">10% rule</span><span class="pill">Biomagnification</span><span class="pill">Biomes</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Energy flows through ecosystems and 90% is lost as heat at each step. Matter cycles and is reused. Only 10% of energy passes from one trophic level to the next.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — How is an ecosystem different from a community or population?</div>
+      <p>A population is all the individuals of one species living in the same area. A community is all the different populations of different species living in the same area and interacting with each other. An ecosystem goes one step further — it includes the community plus all the non-living (abiotic) factors like soil, water, sunlight, and temperature. So an ecosystem is the full system: all the living things and all the physical conditions they interact with. A forest community is just the plants and animals. The forest ecosystem includes the soil chemistry, rainfall, sunlight levels, and everything else that shapes how those organisms live.</p>
+    </div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What is a biome and what causes a particular biome to occur in a specific place?</div>
+      <p>A biome is a large geographic region with a similar climate, vegetation type, and set of organisms. The two main factors that determine which biome exists in a place are temperature and precipitation. Together these determine what plants can grow, which then determines what animals can survive there. For example, tropical rainforests exist near the equator where it is hot and wet year-round. Tundra exists near the poles where it is cold and dry. Even if two places are on opposite sides of the world, they will develop similar biomes if they have the same temperature and rainfall patterns — which is why you find similar grassland ecosystems in North America and Central Asia.</p>
+    </div>
+
+    <div class="card">
+      <p>An ecosystem includes all living organisms and their non-living environment working together. Biotic factors are the living things — plants, animals, fungi, bacteria. Abiotic factors are the non-living conditions — soil, water, sunlight, temperature. Both are needed for the ecosystem to function.</p>
+      <p>Food chains show a simple, linear sequence of who eats whom. Food webs are more realistic — they show all the feeding connections between species in an ecosystem. The 10% rule means only 10% of energy transfers from one trophic level to the next, with 90% lost as heat. This explains why food chains are short and why producing meat requires so much more energy and land than growing plant food.</p>
+      <p>Biomagnification happens when persistent toxic chemicals like mercury become more concentrated at each higher level of the food chain — the opposite of energy. Large predatory fish end up with the most toxins. Biomes are large regions defined by climate. Temperature and rainfall determine which biome develops. Over 50% of the world's wetlands have been destroyed by humans — one of the most damaging losses of any biome type.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>The 10% rule changed how I think about food choices. Biomagnification also made pollution feel more personal — chemicals released far away can end up concentrated in the food people eat, connecting industrial decisions to individual health outcomes.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Website · Article</div><div class="resource-title">How Does Mercury Get Into Fish? — NOAA</div></div>
+      <div class="resource-body">
+        <p>This NOAA article explains how mercury from industrial activity enters water systems and moves up the food chain through biomagnification. Large predatory fish accumulate the most mercury, which is why health warnings exist for species like tuna and swordfish.</p>
+        <p>This connected directly to the biomagnification concept from this week. It also reinforced the environmental justice theme from week one — Indigenous and coastal communities that depend on fish as a main food source face the highest mercury exposure from pollution created by industries they have no control over.</p>
+        <div class="citation">National Ocean Service, NOAA. (2023). <em>How does mercury get into fish?</em> https://oceanservice.noaa.gov/facts/mercuryfish.html</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>The 10% rule shows that eating plants is far more efficient than eating meat. But access to plant-based diets is not equal, and many cultures have deep ties to fishing and hunting. How do we balance environmental efficiency with cultural identity and food access when thinking about dietary choices?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 4 -->
+<div class="panel" id="p4"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 4</div><h1>Community and Population Ecology</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Community ecology</span><span class="pill">Predator-prey</span><span class="pill">Population cycles</span><span class="pill">Carrying capacity</span><span class="pill">Natural selection</span><span class="pill">Camouflage & mimicry</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Predator and prey populations are deeply connected. When one changes, the other follows. Removing a predator does not free a prey population — it just delays the crash.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What would happen if we removed all the lynxes from the ecosystem?</div>
+      <p>If all the lynxes were removed, the snowshoe hare population would grow rapidly at first because a major predator is gone. But this growth cannot last forever. The hare population would eventually hit the carrying capacity of the environment — the maximum number of hares the habitat can support with its available food. Once the hares exceeded the food supply, starvation would bring the population back down. Other predators like owls or foxes might also increase to take advantage of the extra prey, gradually filling part of the role the lynx played. The ecosystem would eventually stabilize at a new balance, but it would look different from before — and there would likely be more damage to vegetation during the overpopulation phase.</p>
+    </div>
+
+    <div class="card">
+      <p>Community ecology studies how different species interact in a shared environment. The most important interaction covered was predator-prey relationships — where one population kills and eats another. Predator and prey populations cycle together: prey grow, predators follow, prey crash, predators crash. There is always a lag of one to two years between prey and predator peaks.</p>
+      <p>Carrying capacity is the maximum population size an environment can support. Even without predators, populations cannot grow forever — food, space, and water will always set a limit. Natural selection drives both predators and prey to evolve better survival strategies over time. Prey develop camouflage, poison, and mimicry. Predators develop better speed, vision, and hunting strategies. This back-and-forth is called an evolutionary arms race, and it leads to some of the most impressive adaptations in nature.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>The lynx and hare example made population dynamics feel real. It also made me think about what happens when humans hunt predators to near-extinction — the short-term result might look like a win for prey animals, but the long-term disruption to the whole ecosystem is often severe.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Video · Documentary</div><div class="resource-title">How Wolves Change Rivers — Sustainable Human</div></div>
+      <div class="resource-body">
+        <p>This short video shows what happened when wolves were reintroduced to Yellowstone National Park after being absent for 70 years. The wolves changed deer behavior, which allowed vegetation to grow back, which changed river patterns — a chain reaction called a trophic cascade.</p>
+        <p>This directly illustrated the predator-prey and carrying capacity concepts from this week. It showed that removing or adding a top predator does not just affect its prey — it reshapes the entire ecosystem in ways that are hard to predict and sometimes impossible to reverse.</p>
+        <div class="citation">Sustainable Human. (2014). <em>How wolves change rivers</em> [Video]. YouTube. https://www.youtube.com/watch?v=ysa5OBhXz-Q</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>If a top predator like wolves or sharks were removed from an ecosystem, what chain of events do you think would follow? And do you think humans have a responsibility to reintroduce species we drove out — even if local communities oppose it?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 5 -->
+<div class="panel" id="p5"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 5</div><h1>Biodiversity and Mass Extinctions</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Biodiversity</span><span class="pill">6th mass extinction</span><span class="pill">CITES</span><span class="pill">Species at Risk Act</span><span class="pill">Protected areas</span><span class="pill">Habitat restoration</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>We are in the 6th mass extinction — caused by humans. Protecting biodiversity requires coordinated action at every level, from local conservation to international law.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What conservation strategies can help protect biodiversity?</div>
+      <p>Several strategies work together. Laws and international agreements like CITES and Canada's Species at Risk Act protect specific species and regulate harmful trade. Protected areas like national parks and biodiversity hotspots preserve critical habitats. Wildlife corridors connect separate habitat patches so animals can move between them and maintain healthy gene pools. Habitat restoration actively repairs damaged ecosystems — replanting native trees, restoring wetlands, reintroducing lost species. Captive breeding programs in zoos and aquariums help species on the edge of extinction survive while their wild habitats recover. No single strategy is enough on its own — effective conservation requires all of these working together, along with public education and long-term funding.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered biodiversity and why it matters. Earth has had five mass extinctions before — events where a large portion of species disappeared in a geologically short time. Scientists now agree we are in the sixth, driven by habitat destruction, pollution, hunting, invasive species, and climate change.</p>
+      <p>Conservation strategies include international laws like CITES, which controls trade of endangered species, and Canada's Species at Risk Act, which classifies species as extirpated, endangered, or threatened. The Paris Agreement addresses climate change — one of the biggest long-term threats to biodiversity. Protected areas, wildlife corridors, and habitat restoration all help preserve and rebuild ecosystems. Captive breeding in zoos and aquariums can keep species alive while their habitats recover. Life is organized into three domains, and biodiversity at every level — genetic, species, and ecosystem — is essential for healthy, resilient natural systems.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>Learning we are already in a mass extinction happening right now — not in the distant past — made conservation feel urgent rather than optional. The range of strategies covered gave me some hope that slowing it down is actually possible if we act with intention.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Article · Educational</div><div class="resource-title">Mass Extinction Facts — National Geographic</div></div>
+      <div class="resource-body">
+        <p>This article explains what mass extinctions are, how scientists measure extinction rates, and why today's rate — hundreds of times higher than the natural background — qualifies as a mass extinction event. It covers the main human causes and what is at stake for ecosystems and human survival.</p>
+        <p>This resource added important context about the scale and speed of current biodiversity loss. It also reinforced why conservation laws and international agreements are so critical — the problem is moving faster than most people realize, and voluntary efforts alone are not enough to stop it.</p>
+        <div class="citation">National Geographic. (2022). <em>Mass extinction facts and information</em>. https://www.nationalgeographic.com/environment/article/mass-extinction</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Conservation efforts like protected areas and wildlife corridors cost money and sometimes restrict what local communities can do with their land. Do you think the benefits of protecting biodiversity justify these costs — and who should bear the financial burden of conservation?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 6 -->
+<div class="panel" id="p6"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 6</div><h1>Environmental Toxins and Human Health</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Toxicology</span><span class="pill">LD-50</span><span class="pill">Carcinogens</span><span class="pill">Mercury & arsenic</span><span class="pill">Endocrine disruptors</span><span class="pill">Love Canal</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>The dose makes the poison. Almost any substance can be harmful at the right amount. Toxic chemicals in the environment cause cancer, birth defects, nerve damage, and hormone disruption — and they hit vulnerable communities the hardest.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — How should we balance the benefits of modern technology against long-term environmental and health costs, especially for vulnerable communities?</div>
+      <p>This is one of the hardest questions in environmental science. Modern chemicals and technologies — pesticides, industrial manufacturing, pharmaceuticals — have brought real benefits like increased food production, better medicine, and economic growth. But many of these come with long-term costs that are often paid by people who never benefited from them. The Love Canal disaster showed this clearly: a community built on a toxic waste site suffered cancer and birth defects while the company that dumped the waste had long moved on. I think the precautionary principle needs to be applied more strictly — companies should have to prove their products are safe before selling them at scale, not after communities have already been harmed. The burden of proof should not fall on the people living near the pollution.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered how toxic chemicals affect living things and the environment. The LD-50 is the dose that kills 50% of a test population. The ED-50 causes a significant response in 50% without necessarily killing. Types of contaminants include carcinogens (cancer), teratogens (birth defects), mutagens (DNA changes), neurotoxicants (nerve damage), and endocrine disruptors (hormone interference).</p>
+      <p>Arsenic and mercury are two of the most widespread global contaminants. Arsenic enters groundwater through agriculture and ends up in rice and fish. Mercury bioaccumulates through food chains, especially in large fish. BPA and phthalates are synthetic chemicals in plastics that act as endocrine disruptors — interfering with hormones at very low doses. Radiation from UV rays, x-rays, and radioactive gases like radon also poses environmental health risks.</p>
+      <p>The Love Canal case study showed the real-world consequences of poor chemical waste management. A school and homes were built on a toxic dump site. Residents developed serious health problems. The disaster led directly to the creation of the Superfund program for cleaning up contaminated sites across the United States.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>The Love Canal story was disturbing — people had no idea their neighbourhood was built on a chemical dump. It made the concept of environmental justice feel very concrete. The communities most exposed to toxic chemicals are almost always the ones with the least political power to stop it.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Article · Educational</div><div class="resource-title">Endocrine Disruptors — National Institute of Environmental Health Sciences</div></div>
+      <div class="resource-body">
+        <p>This NIEHS article explains what endocrine disruptors are, which chemicals are most common, and what health effects they cause — including developmental problems, reproductive issues, and increased cancer risk. It covers everyday sources like plastic containers, pesticides, and personal care products.</p>
+        <p>This deepened my understanding of how synthetic chemicals cause harm at very low doses by interfering with the body's hormone system rather than causing direct toxic damage. It also showed that these chemicals are far more widespread in everyday life than most people realize — making the need for stronger safety standards very clear.</p>
+        <div class="citation">National Institute of Environmental Health Sciences. (2023). <em>Endocrine disruptors</em>. https://www.niehs.nih.gov/health/topics/agents/endocrine</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Many toxic chemicals are found in everyday products like plastic bottles and food packaging. Companies often argue these are safe at the levels people are exposed to. Given what we know about endocrine disruptors and the precautionary principle, should companies have to prove safety before selling products — or should governments have to prove harm before banning them?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 7 -->
+<div class="panel" id="p7"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 7</div><h1>Climate Change</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Greenhouse gases</span><span class="pill">Global warming</span><span class="pill">1.5°C target</span><span class="pill">Paris Agreement</span><span class="pill">Fossil fuels</span><span class="pill">Net zero</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Human activity — mainly burning fossil fuels — has warmed the Earth by 1.42°C since the industrial revolution. Every fraction of a degree of additional warming makes the consequences worse.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What are the causes and consequences of climate change, and what can be done?</div>
+      <p>Climate change is caused primarily by burning fossil fuels — coal, oil, and gas — which releases carbon dioxide and methane into the atmosphere. These greenhouse gases trap heat, raising global temperatures. The consequences include more extreme droughts, floods, wildfires, stronger storms, rising sea levels, and loss of biodiversity. People in poorer and coastal nations are suffering the most, even though they contributed the least to the problem. Solutions include cutting emissions by switching to renewable energy, improving energy efficiency, protecting forests, and changing agricultural practices. The Paris Agreement sets a target of limiting warming to 1.5°C above pre-industrial levels. To reach that, global emissions need to be cut in half by 2030 and reach net zero by 2050 — which requires urgent, large-scale action from governments, companies, and individuals.</p>
+    </div>
+
+    <div class="card">
+      <p>Climate change refers to long-term shifts in temperature and weather driven by human activity since the 1800s. Burning fossil fuels releases greenhouse gases that act like a blanket around the Earth, trapping heat. The planet is now about 1.42°C warmer than before the industrial revolution, and the last decade (2015–2024) was the warmest on record.</p>
+      <p>The effects go far beyond warmer temperatures — more intense droughts, floods, wildfires, melting polar ice, rising seas, and declining biodiversity. People in developing nations and small island states suffer the most, despite contributing the least to the problem. The six biggest emitters — China, USA, India, EU, Russia, and Indonesia — account for over half of all global emissions. The 45 least developed countries contribute only 3%.</p>
+      <p>Limiting warming to 1.5°C requires cutting emissions in half by 2030 and reaching net zero by 2050. Current policies point to 2.8°C of warming by 2100. Solutions include transitioning from fossil fuels to solar and wind energy, protecting forests, and changing how we produce food and build cities.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>The gap between who causes climate change and who suffers most from it struck me as one of the clearest examples of environmental injustice at a global scale — the same pattern we see in communities like the South Bronx, just playing out between entire countries.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Website · Reference</div><div class="resource-title">What Is Climate Change? — United Nations</div></div>
+      <div class="resource-body">
+        <p>This UN page provides a clear overview of climate change — its causes, human impacts, and solutions. It includes information on the Paris Agreement, net zero targets, and why every fraction of a degree of warming matters for people around the world.</p>
+        <p>This resource added important context about global responsibility. The breakdown of which countries produce the most emissions versus which countries suffer the most consequences made the environmental justice dimension of climate change very clear. It also helped me understand what net zero means and why 2030 is such a critical milestone.</p>
+        <div class="citation">United Nations. (2023). <em>What is climate change?</em> https://www.un.org/en/climatechange/what-is-climate-change</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>The countries that have contributed the most to climate change are not the ones suffering the most from its effects. Do you think wealthier nations have a responsibility to financially support poorer nations in adapting to climate change — and how should that be decided and enforced?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 8 -->
+<div class="panel" id="p8"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 8</div><h1>Water Pollution and Oil Spills</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Water pollution</span><span class="pill">Point sources</span><span class="pill">Nonpoint sources</span><span class="pill">Eutrophication</span><span class="pill">Oil spills</span><span class="pill">Bioremediation</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Water pollution comes from many sources and stays in the environment for a very long time. Different cleanup methods work in different situations, but prevention is always more effective than cleanup.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — How do different real-world variables affect which oil spill cleanup methods are possible, effective, or ethical?</div>
+      <p>The environment where a spill happens makes a huge difference. In open ocean with calm water, skimmers and booms can work well. In rough water they become useless because waves move the oil too fast and the barriers cannot hold. In a coastal marsh or wetland, heavy equipment cannot be used without destroying the fragile habitat — so watching and waiting or careful manual removal may be the only ethical option. In Arctic conditions, cold temperatures slow natural biodegradation and most equipment cannot operate effectively. The type of oil matters too — light crude spreads fast but evaporates faster; heavy crude sinks and contaminates the seafloor. Dispersants make water look cleaner but push the oil into the water column where it harms marine life. There is no one right answer — the best method depends on the specific conditions, and sometimes the least invasive approach causes the least total damage.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered water pollution and oil spill cleanup methods. Water residence time describes how long water stays in a reservoir — groundwater can remain underground for thousands of years, meaning pollutants that reach it persist for an extremely long time. Pollution enters water from point sources (specific locations like factory pipes) and nonpoint sources (diffuse areas like agricultural runoff).</p>
+      <p>Types of water pollutants include oxygen-demanding waste, nutrient pollution (which causes eutrophication and dead zones), pathogens, synthetic chemicals, and oil. Eutrophication happens when excess nutrients cause algal blooms — when the algae die, they consume all the oxygen, creating hypoxic dead zones. The oil spill lab demonstrated several cleanup methods: booms and skimmers remove oil from the surface, sorbents absorb it, dispersants break it up, and bioremediation uses microorganisms to break down oil naturally. The 2010 Deepwater Horizon disaster showed the real limits of all these methods at scale.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>The lab made oil spill cleanup feel genuinely difficult in a way that reading about it does not. The statistic that 2 million people die each year from pathogens in untreated water also put water treatment infrastructure into perspective — it is a matter of life and death, not just comfort.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Article · Case Study</div><div class="resource-title">Deepwater Horizon Oil Spill — NOAA</div></div>
+      <div class="resource-body">
+        <p>This NOAA resource covers the 2010 Deepwater Horizon disaster — the largest accidental marine oil spill in history. It explains what happened, what cleanup methods were used, and what the long-term effects on marine ecosystems, coastal communities, and wildlife have been.</p>
+        <p>This case study connected directly to the lab and showed that even with enormous resources, oil spill cleanup is never complete. It also reinforced the environmental justice angle — fishing communities along the Gulf Coast suffered lasting economic and health consequences from a disaster caused by a large corporation operating in their waters.</p>
+        <div class="citation">NOAA. (2023). <em>Deepwater Horizon oil spill</em>. https://response.restoration.noaa.gov/oil-and-chemical-spills/significant-incidents/deepwater-horizon-oil-spill</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Eutrophication and dead zones are largely caused by agricultural runoff — fertilizers washing off farms into rivers and lakes. Farmers need those fertilizers to produce food. How should we balance the need for food production with the need to protect water quality — and who should pay for fixing these problems?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 9 -->
+<div class="panel" id="p9"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 9</div><h1>Food Security and Agriculture</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Food security</span><span class="pill">Food insecurity</span><span class="pill">Climate and crops</span><span class="pill">Drought</span><span class="pill">Supply chains</span><span class="pill">Sustainable farming</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>The world produces record amounts of food but hundreds of millions still go hungry. Climate change, conflict, and broken supply chains are widening the gap between food production and food access.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — How can farmers protect their yields and sustain themselves in the face of climate change?</div>
+      <p>Farmers are facing a very difficult situation — they need to produce food reliably in conditions that are becoming less predictable every year. Some strategies that can help include developing and planting drought-resistant and heat-tolerant crop varieties that can survive more extreme conditions. Better water management systems like drip irrigation can stretch limited water supplies further. Crop diversification — growing several different crops instead of depending on one — reduces the risk that one bad season destroys everything. Financial tools like crop insurance and microloans can help farmers recover from failed seasons without losing their land. Community-based cooperatives allow small farmers to share resources and access better markets. At a larger scale, protecting and restoring local ecosystems like forests and wetlands can stabilize local rainfall patterns and reduce the intensity of floods and droughts that damage crops.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered food security — having reliable access to enough safe and nutritious food. In 2021, global crop production hit a record 9.3 billion metric tons, yet 193 million people were food insecure. The gap between production and access is growing because of conflict, COVID-19 supply chain disruptions, and climate change.</p>
+      <p>Climate change is directly threatening crop yields. A severe heat wave in India recently destroyed the wheat crop and triggered export bans. Droughts, floods, and unpredictable weather make it harder for farmers — especially small-scale farmers in developing countries — to plan and protect their harvests. When one season fails, families face famine with no safety net.</p>
+      <p>Solutions include drought-resistant crop varieties, better storage and supply chain infrastructure to reduce waste, local food systems, financial support for farmers, and sustainable farming practices like crop rotation and reduced pesticide use. The core problem is not that the world cannot produce enough food — it is that we cannot reliably get it to the people who need it.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>Learning that the world already produces more than enough food but still has massive hunger problems changed how I think about food waste. The issue is not production — it is access, distribution, and climate disruption. People in wealthy countries throwing away food are not just wasting resources; they are wasting food that the system failed to get to someone who needed it.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Video · Documentary</div><div class="resource-title">Agriculture and Climate Change: How Farmers Are Fighting Food Insecurity — DW Documentary</div></div>
+      <div class="resource-body">
+        <p>This documentary follows farmers in India, Africa, and South America who are adapting to climate-driven challenges. It covers real stories of heat waves destroying harvests, supply chain failures, and innovative solutions like drought-resistant crops and community cooperatives.</p>
+        <p>The human stories in this video made the food security statistics feel real. It also reinforced the environmental justice theme — the farmers suffering the most from climate-related crop failures are in regions that contributed the least to climate change. Their vulnerability is not a result of their own choices.</p>
+        <div class="citation">DW Documentary. (2022). <em>Agriculture and climate change: How farmers are fighting food insecurity</em> [Video]. YouTube.</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>The world already produces enough food to feed everyone, yet hundreds of millions go hungry. If this is a problem of distribution and access rather than production, do you think wealthy countries have a responsibility to restructure global food systems — and what would that actually look like in practice?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 10 -->
+<div class="panel" id="p10"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 10</div><h1>Fossil Fuels and Nuclear Energy</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Coal mining</span><span class="pill">Natural gas</span><span class="pill">Fracking</span><span class="pill">Nuclear power</span><span class="pill">Radioactive waste</span><span class="pill">LEED</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Fossil fuels power most of the world but cause serious environmental damage. Nuclear energy produces no direct carbon emissions but creates radioactive waste and carries catastrophic risk.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — To what extent can nuclear energy be considered environmentally harmful despite being classified as a clean energy source?</div>
+      <p>Nuclear energy is called clean because it produces no direct carbon dioxide emissions during operation — which is a real advantage over fossil fuels in the context of climate change. But calling it fully clean ignores several serious environmental problems. First, uranium must be mined, and mining causes significant land destruction, water contamination, and radiation exposure for workers. Second, nuclear plants use enormous amounts of water for cooling, and that water is released at higher temperatures which affects aquatic ecosystems. Third, and most importantly, nuclear power generates high-level radioactive waste that remains dangerous for tens of thousands of years. There is currently no permanent safe storage solution for this waste anywhere in the world. Finally, the risk of catastrophic accidents — as seen at Chernobyl and Fukushima — can cause lasting environmental damage over large areas. So while nuclear is cleaner than coal or gas from a carbon perspective, it is not environmentally harmless. Whether its benefits outweigh its costs depends on how urgently you weigh climate change versus long-term waste and accident risk.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered the energy sources most of the world depends on. Coal is extracted through strip mining and mountaintop removal — both cause massive landscape destruction and water pollution. Natural gas burns more cleanly than coal but is extracted through fracking, which uses high-pressure chemicals and can contaminate groundwater.</p>
+      <p>Nuclear power uses energy released when radioactive atoms split apart. It produces no direct carbon emissions and can generate electricity 24 hours a day. However, it produces high-level radioactive waste that stays dangerous for thousands of years and has no permanent storage solution. It also requires uranium mining, uses large amounts of water, and carries the risk of catastrophic accidents like Chernobyl and Fukushima.</p>
+      <p>The debate around nuclear is ongoing among environmentalists. Some support it as a bridge away from fossil fuels given the urgency of climate change. Others argue its risks and waste make it too dangerous and expensive compared to expanding renewables. Both positions have valid arguments — the answer likely depends on the specific country, its energy needs, and its alternatives.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>I used to think nuclear was clearly bad. This week made me see it is more complicated. The waste problem is real and serious — but so is climate change. Understanding both sides helped me appreciate why this debate continues among people who all care about the environment.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Article · Explainer</div><div class="resource-title">What Is Fracking and Why Is It Controversial? — BBC News</div></div>
+      <div class="resource-body">
+        <p>This BBC article explains fracking in plain language — what it is, how it works, and why it is controversial. It covers risks like groundwater contamination, air pollution, and increased earthquake activity, as well as arguments made in its favour regarding energy security and lower coal use.</p>
+        <p>This resource helped me understand the fracking debate in a balanced way. It showed that like nuclear, fracking is not a simple good or bad — it has real trade-offs that depend on location, regulation, and what alternatives are available. It also reinforced how difficult the energy transition is when fossil fuel infrastructure is so deeply embedded in economies.</p>
+        <div class="citation">BBC News. (2019). <em>What is fracking and why is it controversial?</em> https://www.bbc.com/news/uk-14432401</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Nuclear energy produces no direct carbon emissions but generates radioactive waste that lasts thousands of years. Given the urgency of climate change, do you think nuclear should be expanded as part of the solution — or do its risks and waste problems make it too dangerous to rely on?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 11 -->
+<div class="panel" id="p11"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 11</div><h1>Renewable Energy</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · 2026</div></div>
+  <div class="pills"><span class="pill">Solar energy</span><span class="pill">Wind energy</span><span class="pill">Geothermal</span><span class="pill">Hydropower</span><span class="pill">Biomass</span><span class="pill">Energy storage</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>All renewable energy comes from three natural sources: the sun, the Earth's heat, and gravity. Renewables are growing fast but still supply only a small fraction of the world's energy needs.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What are the advantages and limitations of renewable energy sources?</div>
+      <p>The biggest advantage of renewables is that they do not run out and produce little to no greenhouse gas emissions during operation — making them essential for addressing climate change. Solar and wind in particular have become dramatically cheaper in recent years and can be deployed at many scales, from rooftop panels to large farms. However, there are real limitations. Renewable energy is intermittent — solar does not work at night, wind does not blow constantly — so storage technology needs to improve significantly to make these sources reliable. The geographic distribution of the best resources is uneven: the strongest solar potential is in deserts, the best wind is offshore, and hydropower requires mountainous terrain. This means some regions have much better access to renewables than others. Large hydropower projects can also destroy river ecosystems and displace communities. Biomass produces some emissions and competes with food production for land. Despite these challenges, the transition to renewables is the most critical step in reducing carbon emissions at the scale needed to address climate change.</p>
+    </div>
+
+    <div class="card">
+      <p>This week covered renewable energy — sources that replenish naturally and do not run out. All renewable energy traces back to three sources: sunlight, the Earth's internal heat, and the gravitational pull of the moon and sun. Solar is by far the largest contributor — it drives wind, powers the water cycle, and fuels photosynthesis.</p>
+      <p>Solar energy uses photovoltaic cells to convert sunlight into electricity. Wind turbines generate electricity from moving air — offshore wind is up to 50% stronger and more consistent than onshore. Geothermal energy uses the Earth's constant underground temperature, has very low environmental impact, and works 24/7. Hydropower generates electricity from flowing water and is currently the world's largest renewable source, but large dams flood ecosystems and displace communities. Biomass burns organic material and still produces some emissions.</p>
+      <p>Despite rapid growth, renewables still supply only a small share of global energy. Geographic distribution is uneven — the best solar resources are in deserts, the best wind is offshore, and hydropower needs mountains. Improving energy storage and building smarter grids are the key challenges in making renewables more reliable worldwide.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>Learning that all renewable energy comes from just three natural sources made it feel elegant and logical. It also made me think about how unevenly distributed these resources are — countries near the equator have enormous solar potential but often the least money to develop it, while wealthier countries with less sun are making the biggest investments in solar technology.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">Article · Explainer</div><div class="resource-title">Renewable Energy Explained — National Geographic</div></div>
+      <div class="resource-body">
+        <p>This National Geographic article explains each type of renewable energy — solar, wind, geothermal, hydropower, and biomass — including how each works, where it works best, and what the environmental trade-offs are. It also covers the rapid growth of renewables globally and the challenges that remain.</p>
+        <p>This helped me understand that even renewable energy is not perfectly clean — wind turbines can harm birds and bats, large dams destroy river ecosystems, and biomass produces emissions. Choosing the right renewable for the right location matters. It reinforced that the energy transition is not just about switching technologies — it requires careful planning to avoid trading one set of environmental problems for another.</p>
+        <div class="citation">National Geographic. (2023). <em>Renewable energy explained</em>. https://www.nationalgeographic.com/environment/article/renewable-energy</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Renewable energy is growing fast, but the best solar and wind resources are not evenly distributed. Poorer countries near the equator often have the most solar potential but the least money to develop it. Should wealthier nations fund renewable energy development in poorer countries as part of their climate commitments — and how would that be different from historical patterns of foreign aid?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · 2026</div>
+</div></div>
+
+<!-- WEEK 12 -->
+<div class="panel" id="p12"><div class="page">
+  <div class="hero"><div class="hero-tag">Week 12 · Final</div><h1>Creating Green Cities: Urbanization and Sustainable Communities</h1><div class="hero-meta">NAT260NBB · Seneca Polytechnic · April 2026</div></div>
+  <div class="pills"><span class="pill">Urbanization</span><span class="pill">Environmental justice</span><span class="pill">Suburban sprawl</span><span class="pill">Green space</span><span class="pill">Smart growth</span><span class="pill">LEED</span><span class="pill">Urban heat island</span></div>
+  <div class="section">
+    <div class="section-head"><div class="section-num">1</div><div class="section-lbl">Summary of Learning</div></div>
+    <div class="key-idea"><strong>Key Idea</strong>Since 2008, more than half the world lives in cities. Cities can be more efficient than suburbs — but only if they are designed well and with justice in mind.</div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What is the pattern of global urbanization and what are the trade-offs of urban living?</div>
+      <p>Since 2008, for the first time in history, more than half the world's population lives in urban areas. Megacities — those with 10 million or more residents — are growing fast, and by 2035 there will be 43 of them. This shift is happening fastest in Asia and Africa. The trade-offs of urban living are real on both sides. On the positive side, cities allow people to share infrastructure, use public transit, and live in smaller homes — all of which lower per-person carbon footprints. On the negative side, cities are hotspots for air pollution, generate enormous amounts of waste, suffer from the urban heat island effect, and create eutrophication risks from stormwater runoff. The key insight is that cities are not inherently good or bad for the environment — it depends entirely on how they are designed, governed, and who benefits from their resources.</p>
+    </div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — What is environmental justice and what does suburban sprawl generate?</div>
+      <p>Environmental justice is the idea that every person, regardless of income or background, has the right to live in a clean and healthy environment and have a voice in decisions that affect their environment. In practice, low-income and minority communities are far more likely to live near pollution sources and have less access to green space, clean water, and healthy food. The South Bronx is a perfect example — it handled 40% of New York City's commercial waste while wealthier neighborhoods had parks and clean air. Suburban sprawl generates its own set of environmental problems: it converts farmland and natural areas into low-density housing, makes people dependent on cars, increases energy use per household, and removes the natural ground cover that absorbs rainwater — leading to more flooding. Suburban residents generally have a higher per-person environmental impact than urban residents, even though they may feel they live in a greener setting.</p>
+    </div>
+
+    <div class="big-q">
+      <div class="big-q-label">Big Question — How does smart growth help make a city green, and what are the design features of a green building?</div>
+      <p>Smart growth is a set of strategies that help cities develop in more sustainable ways. These include creating walkable neighborhoods, mixing residential and commercial areas so people can reach destinations without driving, prioritizing public transit, preserving green space, and setting urban growth boundaries to prevent sprawl. Infill development — building on empty lots within existing cities rather than expanding outward — is another key strategy. A green building uses design and technology to reduce its environmental impact. Key features include solar panels or other renewable energy systems, energy-efficient windows and insulation to reduce heating and cooling needs, green roofs that absorb stormwater and reduce the urban heat island effect, water-saving fixtures, sustainable building materials, and natural lighting. The LEED certification program provides a standard way to measure and recognize these features, rating buildings from standard to silver, gold, or platinum.</p>
+    </div>
+
+    <div class="card">
+      <p>This final module brought together many themes from across the course and applied them to cities. Urbanization is one of the defining trends of our time. The South Bronx story — where Majora Carter transformed an abandoned lot into Hunts Point Riverside Park and founded Sustainable South Bronx — showed that green urban change is possible even in the most burdened communities. Her work demonstrated the triple bottom line: a project that is good for the environment, the economy, and the community at the same time. Smart growth and LEED-certified green buildings represent the tools we have to make cities healthier and more sustainable for everyone who lives in them.</p>
+    </div>
+    <div class="reflection"><div class="reflection-lbl">Personal Reflection</div><p>Living in Markham, this module felt directly relevant. Suburban sprawl is not abstract — it is the reason I need a car to get almost anywhere. The Majora Carter story was the most motivating thing I read all semester. Real change does not always come from the top. Sometimes it starts with one person deciding their community deserves better.</p></div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">2</div><div class="section-lbl">Related Resource</div></div>
+    <div class="resource">
+      <div class="resource-top"><div class="resource-type">TED Talk · Video</div><div class="resource-title">Greening the Ghetto — Majora Carter</div></div>
+      <div class="resource-body">
+        <p>In this TED Talk, Majora Carter describes how the South Bronx became one of the most environmentally burdened communities in the United States and how she fought back. She explains how industrial facilities were deliberately concentrated in low-income neighborhoods and how community-led green initiatives can reverse decades of neglect while also creating economic opportunity — the triple bottom line.</p>
+        <p>This video made environmental justice feel human and real. It also showed what smart growth actually looks like when it works — not just planting trees, but creating jobs, improving health, changing zoning laws, and giving a community ownership over its own environment. It was the most powerful illustration of this week's themes.</p>
+        <div class="citation">Carter, M. (2006, February). <em>Greening the ghetto</em> [Video]. TED Conferences. https://www.ted.com/talks/majora_carter_s_tale_of_urban_renewal</div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="section-head"><div class="section-num">3</div><div class="section-lbl">Peer Question</div></div>
+    <div class="question"><p>Cities in developing countries will absorb most of the world's future population growth but often lack resources to implement smart growth or build green infrastructure. Wealthier nations have contributed far more to climate change and environmental damage. Do you think wealthy countries have a responsibility to fund sustainable urban development in poorer countries — and who should make sure that money is used fairly and effectively?</p></div>
+  </div>
+  <div class="footer">NAT260NBB · Environmental Science · Seneca Polytechnic · April 2026</div>
+</div></div>
+
+<script>
+  function show(n) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('p' + n).classList.add('active');
+    document.querySelectorAll('.tab')[n - 1].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
